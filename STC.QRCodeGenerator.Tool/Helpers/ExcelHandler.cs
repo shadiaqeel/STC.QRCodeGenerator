@@ -42,13 +42,13 @@ namespace STC.QRCodeGenerator.Tool.Helpers
             try
             {
                 var offset = ((pageNumber - 1) * pageSize) + 2;
-                var toRow = offset + pageSize;
+                var toRow = offset + pageSize -1;
 
                 //iterate over the rows and columns and print to the console as it appears in the file
                 //excel is not zero based!!
                 for (int col = 1; col <= ColCount; col++)
                 {
-                    if (GetCell(xRange, col, 1) == columnName)
+                    if (GetCell(xRange, col, 1).Trim().Equals(columnName,StringComparison.OrdinalIgnoreCase))
                     {
                         IsExistCol = true;
                         for (int row = offset; row <= toRow && row <= RowCount + 1; row++)

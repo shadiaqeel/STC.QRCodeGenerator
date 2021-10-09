@@ -40,6 +40,9 @@ namespace STC.QRCodeGenerator.Tool
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.lblProgress = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.numQRSize = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.trQRSize = new System.Windows.Forms.TrackBar();
             this.gbOutputType = new System.Windows.Forms.GroupBox();
             this.rdPDF = new System.Windows.Forms.RadioButton();
             this.rdPNG = new System.Windows.Forms.RadioButton();
@@ -62,6 +65,8 @@ namespace STC.QRCodeGenerator.Tool
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numQRSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trQRSize)).BeginInit();
             this.gbOutputType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQRY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQRX)).BeginInit();
@@ -168,6 +173,9 @@ namespace STC.QRCodeGenerator.Tool
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPage2.Controls.Add(this.numQRSize);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.trQRSize);
             this.tabPage2.Controls.Add(this.gbOutputType);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.txtColName);
@@ -191,6 +199,40 @@ namespace STC.QRCodeGenerator.Tool
             this.tabPage2.Size = new System.Drawing.Size(875, 421);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Settings";
+            // 
+            // numQRSize
+            // 
+            this.numQRSize.Enabled = false;
+            this.numQRSize.Location = new System.Drawing.Point(449, 302);
+            this.numQRSize.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numQRSize.Name = "numQRSize";
+            this.numQRSize.Size = new System.Drawing.Size(56, 23);
+            this.numQRSize.TabIndex = 25;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(49, 304);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(46, 15);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "QR Size";
+            // 
+            // trQRSize
+            // 
+            this.trQRSize.Location = new System.Drawing.Point(144, 304);
+            this.trQRSize.Minimum = 1;
+            this.trQRSize.Name = "trQRSize";
+            this.trQRSize.Size = new System.Drawing.Size(299, 45);
+            this.trQRSize.TabIndex = 23;
+            this.trQRSize.TickFrequency = 5;
+            this.trQRSize.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trQRSize.Value = 1;
+            this.trQRSize.Scroll += new System.EventHandler(this.trk_Scroll);
             // 
             // gbOutputType
             // 
@@ -403,6 +445,8 @@ namespace STC.QRCodeGenerator.Tool
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numQRSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trQRSize)).EndInit();
             this.gbOutputType.ResumeLayout(false);
             this.gbOutputType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQRY)).EndInit();
@@ -448,6 +492,9 @@ namespace STC.QRCodeGenerator.Tool
         private System.Windows.Forms.GroupBox gbOutputType;
         private System.Windows.Forms.RadioButton rdPDF;
         private System.Windows.Forms.RadioButton rdPNG;
+        private System.Windows.Forms.NumericUpDown numQRSize;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TrackBar trQRSize;
     }
 }
 

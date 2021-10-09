@@ -22,7 +22,7 @@ namespace STC.QRCodeGenerator.Tool
             {
                 if (outputBox.InvokeRequired)
                 {
-                    outputBox?.Invoke((MethodInvoker)delegate { outputBox.AppendText(text + Environment.NewLine ); });
+                    outputBox?.Invoke((MethodInvoker)delegate { outputBox.AppendText(text + Environment.NewLine ); outputBox.ScrollToCaret(); });
                     return;
                 }
                 outputBox.AppendText(text + Environment.NewLine);

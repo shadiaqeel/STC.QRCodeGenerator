@@ -30,7 +30,9 @@ namespace STC.QRCodeGenerator.Tool
         public static string ColumnName => GetAppSetting("ColumnName", "Desk");
 
         public static int HeightQRCode => GetAppSetting("HeightQRCode",220);
-        public static int WidthQRCode => GetAppSetting("WidthQRCode", 230);
+        public static int WidthQRCode => GetAppSetting("WidthQRCode", 220);
+        public static double QRSizeFactor => GetAppSetting("QRSizeFactor", 0.2);
+        public static int ThreadCount => GetAppSetting("ThreadCount", 10);
 
         private static T GetAppSetting<T>(string key, T defaultValue)
         {
