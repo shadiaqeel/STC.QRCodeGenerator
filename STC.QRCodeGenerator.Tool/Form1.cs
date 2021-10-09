@@ -294,6 +294,61 @@ namespace STC.QRCodeGenerator.Tool
 
         private async Task<bool> ReadExcelSheet()
         {
+
+            if (AppConfig.ThreadCount > 1)
+                return await MultiThread();
+
+            return SingleThread();
+
+        }
+
+        private bool SingleThread()
+        {
+            _logger.WriteLog(txtExcel.Text);
+            _logger.WriteLog("======================================================= ");
+            using var reader = new ExcelHandler(_logger, txtExcel.Text);
+
+            _logger.WriteLog($"Codes Count : {reader.RowCount}");
+            progressBar?.Invoke((MethodInvoker)delegate { progressBar.Maximum = reader.RowCount; });
+            progressBar?.Invoke((MethodInvoker)delegate { progressBar.Value = 0; });
+            lblProgress?.Invoke((MethodInvoker)delegate { lblProgress.Text = $"{0}/{reader.RowCount}"; });
+
+
+
+            var pageNo = 1;
+            var count = 0;
+            var pageSize = 100;
+
+
+            while (count < reader.RowCount)
+            {
+                var list = reader.Read(Settings.ColumnName, pageNo, pageSize, out bool isExistCol);
+                if (!isExistCol)
+                {
+                    MessageBox.Show("Target Column is not exsit in excel sheet, please enter valid column name in settings tab");
+                    return false;
+                }
+                count += list.Length;
+                pageNo++;
+
+
+
+                if (list.Length == 0)
+                {
+                    break;
+                }
+            }
+            _logger.WriteLog("======================================================= ");
+            _logger.WriteLog($"Output Path : {AppConfig.DestinationPath}");
+
+
+            return true;
+
+        }
+
+
+        private async Task<bool> MultiThread()
+        {
             _logger.WriteLog(txtExcel.Text);
             _logger.WriteLog("======================================================= ");
             using var reader = new ExcelHandler(_logger, txtExcel.Text);
@@ -346,8 +401,8 @@ namespace STC.QRCodeGenerator.Tool
 
 
             return true;
-
         }
+
 
         private bool ProcessList(string[] list)
         {
@@ -368,7 +423,7 @@ namespace STC.QRCodeGenerator.Tool
                         break;
                     default:
                         image = DrawImage(code, Constants.PdfWidth, Constants.PdfHeight);
-                       // image.Save($"{AppConfig.DestinationPath}\\{code}.png", System.Drawing.Imaging.ImageFormat.Png);
+                        // image.Save($"{AppConfig.DestinationPath}\\{code}.png", System.Drawing.Imaging.ImageFormat.Png);
                         SaveToPdf(code, image);
                         break;
                 }

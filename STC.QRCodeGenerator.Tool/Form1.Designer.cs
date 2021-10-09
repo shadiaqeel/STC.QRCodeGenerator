@@ -212,6 +212,7 @@ namespace STC.QRCodeGenerator.Tool
             this.numQRSize.Name = "numQRSize";
             this.numQRSize.Size = new System.Drawing.Size(56, 23);
             this.numQRSize.TabIndex = 25;
+            this.numQRSize.Visible = false;
             // 
             // label7
             // 
@@ -221,6 +222,7 @@ namespace STC.QRCodeGenerator.Tool
             this.label7.Size = new System.Drawing.Size(46, 15);
             this.label7.TabIndex = 24;
             this.label7.Text = "QR Size";
+            this.label7.Visible = false;
             // 
             // trQRSize
             // 
@@ -232,6 +234,7 @@ namespace STC.QRCodeGenerator.Tool
             this.trQRSize.TickFrequency = 5;
             this.trQRSize.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trQRSize.Value = 1;
+            this.trQRSize.Visible = false;
             this.trQRSize.Scroll += new System.EventHandler(this.trk_Scroll);
             // 
             // gbOutputType
