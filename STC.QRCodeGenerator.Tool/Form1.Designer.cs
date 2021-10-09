@@ -61,6 +61,7 @@ namespace STC.QRCodeGenerator.Tool
             this.trkTextY = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.trkTextX = new System.Windows.Forms.TrackBar();
+            this.lblPreviewSize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -96,6 +97,7 @@ namespace STC.QRCodeGenerator.Tool
             // 
             // picPreview
             // 
+            this.picPreview.BackColor = System.Drawing.Color.Gainsboro;
             this.picPreview.Location = new System.Drawing.Point(531, 49);
             this.picPreview.Name = "picPreview";
             this.picPreview.Size = new System.Drawing.Size(327, 313);
@@ -110,7 +112,7 @@ namespace STC.QRCodeGenerator.Tool
             this.btnStart.TabIndex = 4;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_ClickAsync);
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // label1
             // 
@@ -173,6 +175,7 @@ namespace STC.QRCodeGenerator.Tool
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPage2.Controls.Add(this.lblPreviewSize);
             this.tabPage2.Controls.Add(this.numQRSize);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.trQRSize);
@@ -212,7 +215,11 @@ namespace STC.QRCodeGenerator.Tool
             this.numQRSize.Name = "numQRSize";
             this.numQRSize.Size = new System.Drawing.Size(56, 23);
             this.numQRSize.TabIndex = 25;
-            this.numQRSize.Visible = false;
+            this.numQRSize.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label7
             // 
@@ -222,7 +229,6 @@ namespace STC.QRCodeGenerator.Tool
             this.label7.Size = new System.Drawing.Size(46, 15);
             this.label7.TabIndex = 24;
             this.label7.Text = "QR Size";
-            this.label7.Visible = false;
             // 
             // trQRSize
             // 
@@ -234,7 +240,6 @@ namespace STC.QRCodeGenerator.Tool
             this.trQRSize.TickFrequency = 5;
             this.trQRSize.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trQRSize.Value = 1;
-            this.trQRSize.Visible = false;
             this.trQRSize.Scroll += new System.EventHandler(this.trk_Scroll);
             // 
             // gbOutputType
@@ -434,6 +439,15 @@ namespace STC.QRCodeGenerator.Tool
             this.trkTextX.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trkTextX.Scroll += new System.EventHandler(this.trk_Scroll);
             // 
+            // lblPreviewSize
+            // 
+            this.lblPreviewSize.AutoSize = true;
+            this.lblPreviewSize.Location = new System.Drawing.Point(660, 31);
+            this.lblPreviewSize.Name = "lblPreviewSize";
+            this.lblPreviewSize.Size = new System.Drawing.Size(55, 15);
+            this.lblPreviewSize.TabIndex = 26;
+            this.lblPreviewSize.Text = "327 x 313";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -498,6 +512,7 @@ namespace STC.QRCodeGenerator.Tool
         private System.Windows.Forms.NumericUpDown numQRSize;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TrackBar trQRSize;
+        private System.Windows.Forms.Label lblPreviewSize;
     }
 }
 

@@ -42,7 +42,7 @@ namespace STC.QRCodeGenerator.Tool
             _logger.WriteLog($"Background Image : {Settings.BackgroundImage}");
             UpdateBackgroundImg();
             InitSettings();
-            ShowPreview();
+            RefreshPreview();
             if (string.IsNullOrEmpty(txtExcel.Text))
             {
                 txtExcel.Text = @"C:\Users\shadi\Desktop\Stc_QR\files\DeskSheet.xlsx";
@@ -88,64 +88,7 @@ namespace STC.QRCodeGenerator.Tool
         }
 
         #region Events
-        private void trk_Scroll(object sender, EventArgs e)
-        {
-            Settings.TextX = trkTextX.Value;
-            Settings.TextY = trkTextY.Value;
-            Settings.QRCodeX = trkQRX.Value;
-            Settings.QRCodeY = trkQRY.Value;
-            Settings.QRSize = trQRSize.Value;
-
-
-            numTextX.Value = Settings.TextX;
-            numTextY.Value = Settings.TextY;
-            numQRX.Value = Settings.QRCodeX;
-            numQRY.Value = Settings.QRCodeY;
-            numQRSize.Value = Settings.QRSize;
-
-            ShowPreview();
-
-        }
-
-        private void num_ValueChanged(object sender, EventArgs e)
-        {
-            return;
-
-            Settings.TextX = (int)numTextX.Value;
-            Settings.TextY = (int)numTextY.Value;
-            Settings.QRCodeX = (int)numQRX.Value;
-            Settings.QRCodeY = (int)numQRY.Value;
-            Settings.QRSize = (int)numQRSize.Value;
-
-
-            trkTextX.Value = Settings.TextX;
-            trkTextY.Value = Settings.TextY;
-            trkQRX.Value = Settings.QRCodeX;
-            trkQRY.Value = Settings.QRCodeY;
-            trQRSize.Value = Settings.QRSize;
-
-            ShowPreview();
-
-
-        }
-        private void radioOutputType_CheckedChange(object sender, EventArgs e)
-        {
-            var selectedRadio = gbOutputType.Controls.OfType<RadioButton>().FirstOrDefault(n => n.Checked);
-
-            if (selectedRadio.Name.Contains("Png", StringComparison.OrdinalIgnoreCase))
-            {
-                Settings.outputType = OutputType.Png;
-            }
-            else
-            {
-                Settings.outputType = OutputType.Pdf;
-                // picPreview.Width = Constants.PdfWidth / Constants.PdfToPreviewRatio;
-                // picPreview.Height = Constants.PdfHeight / Constants.PdfToPreviewRatio;
-            }
-        }
-
-
-        private async void btnStart_ClickAsync(object sender, EventArgs e)
+        private async void btnStart_Click(object sender, EventArgs e)
         {
             Settings.ColumnName = txtColName.Text;
             if (string.IsNullOrEmpty(txtExcel.Text))
@@ -179,6 +122,68 @@ namespace STC.QRCodeGenerator.Tool
 
         }
 
+        private void trk_Scroll(object sender, EventArgs e)
+        {
+            Settings.TextX = trkTextX.Value;
+            Settings.TextY = trkTextY.Value;
+            Settings.QRCodeX = trkQRX.Value;
+            Settings.QRCodeY = trkQRY.Value;
+            Settings.QRSize = trQRSize.Value;
+
+
+            numTextX.Value = Settings.TextX;
+            numTextY.Value = Settings.TextY;
+            numQRX.Value = Settings.QRCodeX;
+            numQRY.Value = Settings.QRCodeY;
+            numQRSize.Value = Settings.QRSize;
+
+            RefreshPreview();
+
+        }
+
+        private void num_ValueChanged(object sender, EventArgs e)
+        {
+            return;
+
+            Settings.TextX = (int)numTextX.Value;
+            Settings.TextY = (int)numTextY.Value;
+            Settings.QRCodeX = (int)numQRX.Value;
+            Settings.QRCodeY = (int)numQRY.Value;
+            Settings.QRSize = (int)numQRSize.Value;
+
+
+            trkTextX.Value = Settings.TextX;
+            trkTextY.Value = Settings.TextY;
+            trkQRX.Value = Settings.QRCodeX;
+            trkQRY.Value = Settings.QRCodeY;
+            trQRSize.Value = Settings.QRSize;
+
+            RefreshPreview();
+
+
+        }
+        private void radioOutputType_CheckedChange(object sender, EventArgs e)
+        {
+            var selectedRadio = gbOutputType.Controls.OfType<RadioButton>().FirstOrDefault(n => n.Checked);
+
+            if (selectedRadio.Name.Contains("Png", StringComparison.OrdinalIgnoreCase))
+            {
+                Settings.outputType = OutputType.Png;
+                lblPreviewSize.Text = $"{_backgroundImg.Width} x {_backgroundImg.Height}";
+            }
+            else
+            {
+                Settings.outputType = OutputType.Pdf;
+                // picPreview.Width = Constants.PdfWidth / Constants.PdfToPreviewRatio;
+                // picPreview.Height = Constants.PdfHeight / Constants.PdfToPreviewRatio;
+                lblPreviewSize.Text = $"{Constants.PdfWidth} x {Constants.PdfHeight}";
+
+            }
+            RefreshPreview();
+        }
+
+
+
         private void txtExcel_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "Excel Files |*.csv;*.xls;*.xlsx|CSV file|*.csv|XLS file|*.xls|XLSX file|*.xlsx";
@@ -198,72 +203,77 @@ namespace STC.QRCodeGenerator.Tool
             {
                 Settings.BackgroundImage = openFileDialog.FileName;
                 UpdateBackgroundImg();
-                ShowPreview();
+                RefreshPreview();
             }
         }
 
         #endregion
 
         #region Methods
-        private void ShowPreview()
+        private void RefreshPreview()
         {
 
-            var img = DrawImage("HQC-B11-F1-R1-T1-K128", picPreview.Height, picPreview.Width);
-            //img = ResizeImage(img, picPreview.Height, picPreview.Width) as Bitmap;
+            var img = DrawImage("HQC-B11-F1-R1-T1-K128");
+
+            if (img.Width > picPreview.ClientSize.Width || img.Height > picPreview.ClientSize.Height)
+                picPreview.SizeMode = PictureBoxSizeMode.Zoom;
+            else
+                picPreview.SizeMode = PictureBoxSizeMode.CenterImage;
+
             picPreview.Image = img;
 
         }
 
-        private Bitmap DrawImage(string data, int outputWidth, int outputHeight)
+        private Bitmap DrawImage(string data)
         {
 
 
-
-            var img = _backgroundImg.Clone() as Bitmap;
-
+            var img = GetBackgroundImg();
             Graphics graph = Graphics.FromImage(img);
+
+            DrawText(data, img, graph);
+
+            DrawQRCode(data, img, graph);
+
+            return img as Bitmap;
+        }
+
+        private void DrawQRCode(string data, Image img, Graphics graph)
+        {
+            //Draw QR Code =============================
+            var edgeLong = Convert.ToInt32(AppConfig.QRCodeSize * AppConfig.QRSizeFactor * Settings.QRSize);
+            var qrImg = ResizeImage(GenerateQRCode(data), edgeLong, edgeLong);
+            var pointQR = new Point();
+            pointQR.X = (img.Width * Settings.QRCodeX) / picPreview.Width;
+            pointQR.Y = (img.Height * Settings.QRCodeY) / picPreview.Height;
+            graph.DrawImage(qrImg, pointQR);
+        }
+
+        private void DrawText(string data, Image img, Graphics graph)
+        {
             //Draw Text ================================
             StringFormat strFormat = new StringFormat();
             strFormat.Alignment = StringAlignment.Center;
             strFormat.LineAlignment = StringAlignment.Center;
 
-            var font = new Font(Constants.TextFont, 27, FontStyle.Bold, GraphicsUnit.Pixel);
+            var font = new Font(Constants.TextFont, AppConfig.TextSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var pointText = new PointF();
             pointText.X = (img.Width * Settings.TextX) / picPreview.Width;
             pointText.Y = (img.Height * Settings.TextY) / picPreview.Height;
             graph.DrawString(data, font, Constants.ColorText, pointText, strFormat);
+        }
 
-
-
-            img = ResizeImage(img, outputHeight, outputWidth) as Bitmap;
-            graph = Graphics.FromImage(img);
-
-            //Draw QR Code =============================
-            //var qrImg = GenerateQRCode(data);
-            //var img = _backgroundImg.Clone() as Bitmap;
-            //graph.DrawImage(qrImg, new Point((img.Width - qrImg.Width) / 2, (img.Height - qrImg.Height) / 2));
-
-            double scale = outputHeight > _backgroundImg.Height ? (double)_backgroundImg.Height / (double)outputHeight : (double)outputHeight / (double)_backgroundImg.Height;
-            int qrImgHeight = Convert.ToInt32((double)AppConfig.HeightQRCode * scale);
-            qrImgHeight = qrImgHeight + Convert.ToInt32((double)qrImgHeight * AppConfig.QRSizeFactor * scale * Settings.QRSize);
-            var qrImg = ResizeImage(GenerateQRCode(data), qrImgHeight, qrImgHeight);
-            var pointQR = new Point();
-            pointQR.X = (img.Width * Settings.QRCodeX) / picPreview.Width;
-            pointQR.Y = (img.Height * Settings.QRCodeY) / picPreview.Height;
-
-            graph.DrawImage(qrImg, pointQR);
-
-
-
-
-
-            return img as Bitmap;
+        private Image GetBackgroundImg()
+        {
+            if (Settings.outputType == OutputType.Pdf)
+                return ResizeImage((Image)_backgroundImg.Clone(), Constants.PdfHeight, Constants.PdfWidth);
+            return _backgroundImg.Clone() as Image;
         }
 
         private Bitmap GenerateQRCode(string data)
         {
             BarcodeWriter barcodeWriter = new BarcodeWriter();
-            EncodingOptions encodingOptions = new EncodingOptions { Height = AppConfig.HeightQRCode, Width = AppConfig.WidthQRCode, Margin = 0, PureBarcode = false };
+            EncodingOptions encodingOptions = new EncodingOptions { Height = AppConfig.QRCodeSize, Width = AppConfig.QRCodeSize, Margin = 0, PureBarcode = false };
             encodingOptions.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             barcodeWriter.Renderer = new BitmapRenderer()
             {
@@ -333,7 +343,7 @@ namespace STC.QRCodeGenerator.Tool
 
 
 
-                if (list.Length == 0)
+                if (!ProcessList(list))
                 {
                     break;
                 }
@@ -412,18 +422,16 @@ namespace STC.QRCodeGenerator.Tool
             foreach (var code in list)
             {
                 _logger.WriteLog(code);
-                Bitmap image;
+                Bitmap image = DrawImage(code);
 
                 switch (Settings.outputType)
                 {
 
                     case OutputType.Png:
-                        image = DrawImage(code, _backgroundImg.Width, _backgroundImg.Height);
                         image.Save($"{AppConfig.DestinationPath}\\{code}.png", System.Drawing.Imaging.ImageFormat.Png);
                         break;
                     default:
-                        image = DrawImage(code, Constants.PdfWidth, Constants.PdfHeight);
-                        // image.Save($"{AppConfig.DestinationPath}\\{code}.png", System.Drawing.Imaging.ImageFormat.Png);
+                        //image.Save($"{AppConfig.DestinationPath}\\{code}.png", System.Drawing.Imaging.ImageFormat.Png);
                         SaveToPdf(code, image);
                         break;
                 }
